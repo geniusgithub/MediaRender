@@ -11,17 +11,18 @@ public class RenderApplication  extends Application{
 
 	private static RenderApplication mInstance;
 	
+
+	
 	
 	public synchronized static RenderApplication getInstance(){
 		return mInstance;
 	}
-	
-	
-	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 	
+		mInstance = this;
+		log.e("RenderApplication onCreate");
 	}
 
 	

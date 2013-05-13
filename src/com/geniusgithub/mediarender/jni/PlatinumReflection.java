@@ -9,7 +9,7 @@ public class PlatinumReflection {
 	
 	private static final CommonLog log = LogFactory.createLog();
 	
-	private static final int MEDIA_RENDER_CTL_MSG_BASE = 0x300;
+	private static final int MEDIA_RENDER_CTL_MSG_BASE = 0x100;
 	/*----------------------------------------------------------------*/
 	public static final int MEDIA_RENDER_CTL_MSG_SET_AV_URL = (MEDIA_RENDER_CTL_MSG_BASE+0);
 	public static final int MEDIA_RENDER_CTL_MSG_STOP = (MEDIA_RENDER_CTL_MSG_BASE+1);
