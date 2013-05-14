@@ -10,6 +10,8 @@ import com.geniusgithub.mediarender.jni.PlatinumJniProxy;
 import com.geniusgithub.mediarender.jni.PlatinumReflection;
 import com.geniusgithub.mediarender.util.CommonLog;
 import com.geniusgithub.mediarender.util.LogFactory;
+import com.mipt.platinum.DLNAInflectClass;
+import com.mipt.platinum.DMRJniProxy;
 
 
 public class DLNAGenaEventBrocastReceiver extends BroadcastReceiver{
@@ -38,17 +40,26 @@ public class DLNAGenaEventBrocastReceiver extends BroadcastReceiver{
 				break;
 			case PlatinumReflection.MEDIA_RENDER_TOCONTRPOINT_SET_MEDIA_DURATION:
 				String duration = intent.getStringExtra(PlatinumReflection.GET_PARAM_MEDIA_DURATION);
-				PlatinumJniProxy.responseGenaEvent(PlatinumReflection.MEDIA_RENDER_TOCONTRPOINT_SET_MEDIA_DURATION, duration, null);
+				//PlatinumJniProxy.responseGenaEvent(PlatinumReflection.MEDIA_RENDER_TOCONTRPOINT_SET_MEDIA_DURATION, duration, null);
+				DMRJniProxy.SendGenaEvent(PlatinumReflection.MEDIA_RENDER_TOCONTRPOINT_SET_MEDIA_DURATION, duration, null);
 				break;
 			case PlatinumReflection.MEDIA_RENDER_TOCONTRPOINT_SET_MEDIA_POSITION:
 				String positionto = intent.getStringExtra(PlatinumReflection.GET_PARAM_MEDIA_POSITION);
-				PlatinumJniProxy.responseGenaEvent(PlatinumReflection.MEDIA_RENDER_TOCONTRPOINT_SET_MEDIA_POSITION,
+//				PlatinumJniProxy.responseGenaEvent(PlatinumReflection.MEDIA_RENDER_TOCONTRPOINT_SET_MEDIA_POSITION,
+//						positionto,null);
+				DMRJniProxy.SendGenaEvent(PlatinumReflection.MEDIA_RENDER_TOCONTRPOINT_SET_MEDIA_POSITION,
 						positionto,null);
 				break;
 			case PlatinumReflection.MEDIA_RENDER_TOCONTRPOINT_SET_MEDIA_PLAYINGSTATE:
 				String playingstate = intent.getStringExtra(PlatinumReflection.GET_PARAM_MEDIA_PLAYINGSTATE);
-				PlatinumJniProxy.responseGenaEvent(PlatinumReflection.MEDIA_RENDER_TOCONTRPOINT_SET_MEDIA_PLAYINGSTATE,
-						playingstate,null);
+//				PlatinumJniProxy.responseGenaEvent(PlatinumReflection.MEDIA_RENDER_TOCONTRPOINT_SET_MEDIA_PLAYINGSTATE,
+//						playingstate,null);
+				DMRJniProxy.SendGenaEvent(PlatinumReflection.MEDIA_RENDER_TOCONTRPOINT_SET_MEDIA_PLAYINGSTATE,
+				playingstate,null);
+				
+				if (playingstate.equalsIgnoreCase(PlatinumReflection.MEDIA_PLAYINGSTATE_STOP)){
+					DMRJniProxy.SendGenaEvent(PlatinumReflection.MEDIA_RENDER_TOCONTRPOINT_SET_MEDIA_POSITION, "00:00:00", null);
+				}						
 				break;
 		}
 	}

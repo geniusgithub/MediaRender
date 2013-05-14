@@ -207,6 +207,26 @@ public class CommonUtil {
 		  boolean ret = State.CONNECTED == mobileState;
 		  return ret;
 	  }
+	  
+	  
+	  
+	  private static long m_lSysNetworkSpeedLastTs = 0;
+		private static long m_lSystNetworkLastBytes = 0;
+		private static float m_fSysNetowrkLastSpeed = 0.0f;
+		public static float getSysNetworkDownloadSpeed() {
+			long nowMS = System.currentTimeMillis();
+			long nowBytes = TrafficStats.getTotalRxBytes();
+
+			long timeinterval = nowMS - m_lSysNetworkSpeedLastTs;
+			long bytes = nowBytes - m_lSystNetworkLastBytes;
+
+			if(timeinterval > 0) m_fSysNetowrkLastSpeed = (float)bytes * 1.0f / (float)timeinterval;
+
+			m_lSysNetworkSpeedLastTs = nowMS;
+			m_lSystNetworkLastBytes = nowBytes;
+
+			return m_fSysNetowrkLastSpeed;
+		}
 }
 
 

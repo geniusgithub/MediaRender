@@ -6,6 +6,7 @@ import com.geniusgithub.mediarender.jni.PlatinumJniProxy;
 import com.geniusgithub.mediarender.util.CommonLog;
 import com.geniusgithub.mediarender.util.CommonUtil;
 import com.geniusgithub.mediarender.util.LogFactory;
+import com.mipt.platinum.DMRJniProxy;
 
 public class DMRWorkThread extends Thread implements IBaseEngine{
 
@@ -105,7 +106,8 @@ public class DMRWorkThread extends Thread implements IBaseEngine{
 			return false;
 		}
 
-		int ret = PlatinumJniProxy.startMediaRender(mFriendName, mUUID);
+	//	int ret = PlatinumJniProxy.startMediaRender(mFriendName, mUUID);
+		int ret = DMRJniProxy.initRender(mFriendName, mUUID);
 		if (ret == 0){
 			return true;
 		}
@@ -115,7 +117,8 @@ public class DMRWorkThread extends Thread implements IBaseEngine{
 
 	@Override
 	public boolean stopEngine() {
-		PlatinumJniProxy.stopMediaRender();
+	//	PlatinumJniProxy.stopMediaRender();
+		DMRJniProxy.stopRender();
 		return true;
 	}
 
