@@ -46,12 +46,16 @@
         
         <activity
             android:name="com.geniusgithub.mediarender.video.VideoActivity"
-            android:label="@string/app_name" >
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:screenOrientation="landscape"
+            android:launchMode="singleTask" >
         </activity>
         
         <activity
             android:name="com.geniusgithub.mediarender.music.MusicActivity"
-            android:label="@string/app_name" >
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:screenOrientation="landscape"
+            android:launchMode="singleTask">
         </activity>
         
         <activity

@@ -60,29 +60,26 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 	private VideoPlayEngineImpl mPlayerEngineImpl;
 	private VideoPlayEngineListener mPlayEngineListener;
 	private MediaControlBrocastFactory mMediaControlBorcastFactory;
-	private TranslateAnimation mHideDownTransformation;
-	private TranslateAnimation mHideUpTransformation;
-	private AlphaAnimation mAlphaHideTransformation;
+
 	
-	
+	private Context mContext;
 	private DlnaMediaModel mMediaInfo = new DlnaMediaModel();	
 	private Handler mHandler;
-	private AbstractTimer mPlayPosTimer;
-	private Context mContext;
 	
+	private AbstractTimer mPlayPosTimer;
 	private AbstractTimer mNetWorkTimer;
 	private CheckDelayTimer mCheckDelayTimer;
 	
 	private boolean isSurfaceCreate = false;
 	private boolean isDestroy = false;
-	
-	private boolean isPause = false;
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
 		log.e("onCreate");
 		setContentView(R.layout.video_player_layout);
-		initView();	
+		setupsView();	
 		initData();
 		
 		refreshIntent(getIntent());
@@ -95,34 +92,11 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 
 		super.onNewIntent(intent);
 	}
-	
-	@Override
-	protected void onResume() {	
-		super.onResume();			
-		
-		log.e("VideoPlayerActivity onResume");
-		if (isPause){
-			isPause = false;
-			play();
-		}
-	}
 
-	@Override
-	protected void onPause() {
-		super.onPause();	
-		
-		log.e("VideoPlayerActivity onPause");
-		isPause = true;
-		pause();
-	}
-
-	
-	
 	@Override
 	protected void onStop() {
 		super.onStop();
 		
-		log.e("VideoPlayerActivity onStop");
 		
 		onDestroy();
 	}
@@ -140,8 +114,10 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 		super.onDestroy();
 
 	}
+	
+	
 
-	public void initView()
+	public void setupsView()
 	{
 		mContext = this;
 		mUIManager = new UIManager();
@@ -170,9 +146,7 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 						refreshSpeed();
 						break;
 					case CHECK_DELAY:
-						if (!isPause){
-							checkDelay();
-						}						
+						checkDelay();				
 						break;
 				}
 			}
@@ -198,14 +172,7 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 		mNetWorkTimer.startTimer();
 		mCheckDelayTimer.startTimer();
 		
-		mHideDownTransformation = new TranslateAnimation(0.0f, 0.0f,0.0f,200.0f);  
-    	mHideDownTransformation.setDuration(1000);
-    	
-    	mAlphaHideTransformation = new AlphaAnimation(1, 0);
-    	mAlphaHideTransformation.setDuration(1000);
-    	
-    	mHideUpTransformation = new TranslateAnimation(0.0f, 0.0f,0.0f,-124.0f);
-    	mHideUpTransformation.setDuration(1000);
+	
 	}
 	
 	
@@ -227,6 +194,25 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 		mUIManager.showControlView(false);
 	}	
 
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+
+		int action = ev.getAction();
+		int actionIdx = ev.getActionIndex();
+		int actionMask = ev.getActionMasked();
+	
+		if(actionIdx == 0 && action == MotionEvent.ACTION_UP) {
+			if(!mUIManager.isControlViewShow()) {	
+				mUIManager.showControlView(true);	
+				return true;
+			}else{
+				delayToHideControlPanel();
+			}
+		}
+		
+		return super.dispatchTouchEvent(ev);
+	}
+	
+	
 	private void delayToPlayMedia(final DlnaMediaModel mMediaInfo){
 	
 		log.e("delayToPlayMedia");
@@ -248,7 +234,6 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 	}
 	
 	private void delayToHideControlPanel(){
-	//	log.e("delayToHideControlPanel");
 		removeHideMessage();
 		mHandler.sendEmptyMessageDelayed(HIDE_TOOL, HIDE_DELAY_TIME);
 	}
@@ -266,13 +251,11 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 	
 	public void play()
 	{
-		log.e("play");
 		mPlayerEngineImpl.play();
 	}
 	
 	public void pause()
 	{
-		log.e("pause");
 		mPlayerEngineImpl.pause();
 	}
 	
@@ -299,7 +282,7 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 	
 	public void checkDelay(){
 		int pos = mPlayerEngineImpl.getCurPosition();
-	//	log.e("checkDelay pos = " + pos);
+
 		boolean ret = mCheckDelayTimer.isDelay(pos);
 		if (ret){
 			mUIManager.showLoadView(true);
@@ -332,7 +315,7 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 
 		@Override
 		public void onTrackStop(DlnaMediaModel itemInfo) {
-			log.e("onTrackStop");
+
 			mPlayPosTimer.stopTimer();
 			DLNAGenaEventBrocastFactory.sendStopStateEvent(mContext);
 			mUIManager.showPlay(true);
@@ -345,7 +328,7 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 
 		@Override
 		public void onTrackPause(DlnaMediaModel itemInfo) {
-			log.e("onTrackPause");
+	
 			mPlayPosTimer.stopTimer();
 			DLNAGenaEventBrocastFactory.sendPauseStateEvent(mContext);
 			mUIManager.showPlay(true);
@@ -354,14 +337,14 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 
 		@Override
 		public void onTrackPrepareSync(DlnaMediaModel itemInfo) {
-			log.e("onTrackPrepareSync");
+
 			mPlayPosTimer.stopTimer();
 			DLNAGenaEventBrocastFactory.sendTranstionEvent(mContext);
 		}
 
 		@Override
 		public void onTrackPrepareComplete(DlnaMediaModel itemInfo) {
-			log.e("onTrackPrepareComplete");
+
 			mPlayPosTimer.stopTimer();
 			int duration = mPlayerEngineImpl.getDuration();
 			DLNAGenaEventBrocastFactory.sendDurationEvent(mContext, duration);	
@@ -388,9 +371,65 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 
 	}
 	
+	
+	@Override
+	public void onBufferingUpdate(MediaPlayer mp, int percent) {
+	//	log.e("onBufferingUpdate --> percen = " + percent + ", curPos = " + mp.getCurrentPosition());
+	  
+		int duration = mPlayerEngineImpl.getDuration();
+		int time = duration * percent / 100;
+		mUIManager.setSeekbarSecondProgress(time);
+	}
+
+	private boolean isSeekComplete = false;
+	@Override
+	public void onSeekComplete(MediaPlayer mp) {
+		isSeekComplete = true;
+		log.e("onSeekComplete ...");
+	}
+
+	@Override
+	public boolean onError(MediaPlayer mp, int what, int extra) {
+		mUIManager.showPlayErrorTip();
+		log.e("onError what = " + what + ", extra = " + extra);
+		return false;
+	}
+
+	@Override
+	public void onPlayCommand() {
+		play();
+	}
+
+	@Override
+	public void onPauseCommand() {
+		pause();
+	}
+
+	@Override
+	public void onStopCommand() {
+		stop();
+	}
+
+	@Override
+	public void onSeekCommand(int time) {
+		log.e("onSeekCmd time = " + time);
+		mUIManager.showControlView(true);
+		seek(time);
+	}
+
 
 
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*---------------------------------------------------------------------------*/
 	class UIManager implements OnClickListener, SurfaceHolder.Callback, OnSeekBarChangeListener{
 		
 		public View mPrepareView;
@@ -400,21 +439,23 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 		public TextView mTVLoadSpeed;
 		
 		public View mControlView;	
-		public View mToolView;
-		public ImageView mImageViewIcon;
+		public View mUpToolView;
+		public View mDownToolView;
+
 		public ImageButton mBtnPlay;
 		public ImageButton mBtnPause;
 		public SeekBar mSeekBar;
 		public TextView mTVCurTime;
 		public TextView mTVTotalTime;
-
-		
-		public ImageView mImageViewLoadProgress;
-		public ImageView mImageViewPreProgress;
+		public TextView mTVTitle;
 		
 		
 		private SurfaceView mSurfaceView;
 		private SurfaceHolder holder = null;  
+		
+		private TranslateAnimation mHideDownTransformation;
+		private TranslateAnimation mHideUpTransformation;
+		private AlphaAnimation mAlphaHideTransformation;
 		
 		
 		public UIManager(){
@@ -429,9 +470,11 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 			mLoadView = findViewById(R.id.loading_panel);
 			mTVLoadSpeed = (TextView) findViewById(R.id.tv_speed);
 			
-			mControlView = findViewById(R.id.control_panel);		
-			mToolView = findViewById(R.id.toolview);
-			mImageViewIcon = (ImageView) findViewById(R.id.iv_icon);
+			mControlView = findViewById(R.id.control_panel);	
+			mUpToolView = findViewById(R.id.up_toolview);
+			mDownToolView = findViewById(R.id.down_toolview);
+			
+			mTVTitle = (TextView) findViewById(R.id.tv_title);
 			
 			mBtnPlay = (ImageButton) findViewById(R.id.btn_play);
 			mBtnPause = (ImageButton) findViewById(R.id.btn_pause);
@@ -448,7 +491,14 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 		    holder.addCallback(this);  
 		    holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		    
-
+			mHideDownTransformation = new TranslateAnimation(0.0f, 0.0f,0.0f,200.0f);  
+	    	mHideDownTransformation.setDuration(1000);
+	    	
+	    	mAlphaHideTransformation = new AlphaAnimation(1, 0);
+	    	mAlphaHideTransformation.setDuration(1000);
+	    	
+	    	mHideUpTransformation = new TranslateAnimation(0.0f, 0.0f,0.0f,-124.0f);
+	    	mHideUpTransformation.setDuration(1000);
 		 
 		}
 
@@ -467,27 +517,25 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 		
 		public void showControlView(boolean isShow){
 			if (isShow){
-				mImageViewIcon.setVisibility(View.VISIBLE);
-				mToolView.setVisibility(View.VISIBLE);
-			//	mControlView.setVisibility(View.VISIBLE);
+				mUpToolView.setVisibility(View.VISIBLE);
+				mDownToolView.setVisibility(View.VISIBLE);
 				mPrepareView.setVisibility(View.GONE);
 				delayToHideControlPanel();
 			}else{
-				if (mToolView.isShown()){
-					mImageViewIcon.setVisibility(View.GONE);				
-					//mControlView.startAnimation(mHideDownTransformation);
-					mToolView.startAnimation(mHideDownTransformation);
-					mToolView.setVisibility(View.GONE);
-					//mControlView.setVisibility(View.GONE);
+				if (mDownToolView.isShown()){				
+					mDownToolView.startAnimation(mHideDownTransformation);
+					mUpToolView.startAnimation(mHideUpTransformation);
+					
+					mUpToolView.setVisibility(View.GONE);
+					mDownToolView.setVisibility(View.GONE);
 				}
 			}
 		}
 		
 		public void showControlView(){
 			removeHideMessage();
-	//		mControlView.setVisibility(View.VISIBLE);
-			mImageViewIcon.setVisibility(View.VISIBLE);
-			mToolView.setVisibility(View.VISIBLE);
+			mUpToolView.setVisibility(View.VISIBLE);
+			mDownToolView.setVisibility(View.VISIBLE);
 		}
 		
 		public void showLoadView(boolean isShow){
@@ -495,7 +543,6 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 				mLoadView.setVisibility(View.VISIBLE);
 			}else{
 				if (mLoadView.isShown()){
-					//mLoadView.startAnimation(mHideUpTransformation);
 					mLoadView.startAnimation(mAlphaHideTransformation);
 					mLoadView.setVisibility(View.GONE);
 				}
@@ -579,9 +626,8 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 		
 		public void setSeekbarProgress(int time)
 		{
-			if (!isSeekbarTouch && !isDrag)
+			if (!isSeekbarTouch)
 			{
-			//	log.e("setSeekbarProgress time = " + time);
 				mSeekBar.setProgress(time);	
 			}
 		}
@@ -610,6 +656,7 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 			setTotalTime(0);
 			setSeekbarMax(100);
 			setSeekbarProgress(0);
+			mTVTitle.setText(mediaInfo.getTitle());
 		}
 		
 		public void setSpeed(float speed){
@@ -625,8 +672,7 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 		}
 
 		public boolean isControlViewShow(){
-			//return mControlView.getVisibility() == View.VISIBLE ? true : false;
-			return mToolView.getVisibility() == View.VISIBLE ? true : false;
+			return mDownToolView.getVisibility() == View.VISIBLE ? true : false;
 		}
 		
 		public boolean isLoadViewShow(){
@@ -639,184 +685,10 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 		}
 		
 		public void showPlayErrorTip(){
-			Toast.makeText(VideoActivity.this, R.string.toast_play_fail, Toast.LENGTH_SHORT).show();
+			Toast.makeText(VideoActivity.this, R.string.toast_videoplay_fail, Toast.LENGTH_SHORT).show();
 		}
 	}
-
 
 	
-	
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-
-		int action = ev.getAction();
-		int actionIdx = ev.getActionIndex();
-		int actionMask = ev.getActionMasked();
-		
-	//	Log.d(TAG, "dispatchTouchEvent. action: "+action+", idx: "+actionIdx +", mask: "+actionMask);
-		
-		if(actionIdx == 0 && action == MotionEvent.ACTION_UP) {
-			if(!mUIManager.isControlViewShow()) {	
-				mUIManager.showControlView(true);	
-				return true;
-			}
-		}
-		
-		return super.dispatchTouchEvent(ev);
-	}
-
-	@Override
-	public boolean dispatchKeyEvent(KeyEvent event) {
-		
-		int keyCode = event.getKeyCode();
-		int keyAction = event.getAction();
-		
-		switch(keyCode){
-		case KeyEvent.KEYCODE_ENTER:
-		case KeyEvent.KEYCODE_DPAD_CENTER:
-			onTransdelCenter(keyAction);
-			return true;
-		case KeyEvent.KEYCODE_DPAD_LEFT:
-			onTransdelLeftRight(event, keyAction, true);
-			return true;
-		case KeyEvent.KEYCODE_DPAD_RIGHT:
-			onTransdelLeftRight(event, keyAction, false);
-			return true;
-//		case KeyEvent.KEYCODE_MENU:
-//			if(keyAction == KeyEvent.ACTION_UP){
-//				startDialogActivity();
-//			}
-//			return true;
-			default:
-				break;
-		}
-
-		return super.dispatchKeyEvent(event);
-	}
-	
-	
-	private void onTransdelCenter(int keyAction){	
-				switch (keyAction) {
-				case KeyEvent.ACTION_UP:
-					{
-						if (!mUIManager.isControlViewShow())
-						{
-							mUIManager.showControlView(true);
-							return ;
-						}
-						mUIManager.togglePlayPause();
-					}
-					break;
-		
-				default:
-					break;
-				}
-		}
-		
-	
-		private final static int INIT_SPEED = 10 * 1000;
-		private final static int INIT_COUNT = 5;		
-		private final static int SPEED_ACCELERATION = 2000;
-		private   int speed = 0;
-		private   int down_count = 0;
-		
-		private boolean isDrag = false;
-		private int lastPos = 0;
-		private void onTransdelLeftRight(KeyEvent event, int keyAction, boolean isLeft){
-			mUIManager.showControlView(true);
-			switch(keyAction){
-			case KeyEvent.ACTION_DOWN:
-			{
-				isDrag = true;			
-				if (down_count < INIT_COUNT){
-					speed = INIT_SPEED;
-
-				}else{
-					speed = INIT_SPEED + (down_count - INIT_COUNT + 1) * SPEED_ACCELERATION;
-				}
-				down_count++;
-				
-				if (lastPos == 0){
-					lastPos = mPlayerEngineImpl.getCurPosition();
-				}					
-		
-				if(isLeft){
-					lastPos -= speed;
-				}else{
-					lastPos += speed;
-				}
-			
-		//		log.e("speed = " + speed);
-				
-				mUIManager.mSeekBar.setProgress(lastPos);
-			}
-				break;
-			case KeyEvent.ACTION_UP:
-			{
-				log.e("ACTION_UP lastPos = " + lastPos);
-				isDrag = false;
-				seek(lastPos);
-				lastPos = 0;
-				speed = 0;
-				down_count = 0;
-			}
-				break;
-			}
-		}
-
-
-
-
-	@Override
-	public void onBufferingUpdate(MediaPlayer mp, int percent) {
-	//	log.e("onBufferingUpdate --> percen = " + percent + ", curPos = " + mp.getCurrentPosition());
-	  
-		int duration = mPlayerEngineImpl.getDuration();
-		int time = duration * percent / 100;
-		mUIManager.setSeekbarSecondProgress(time);
-	}
-
-	private boolean isSeekComplete = false;
-	@Override
-	public void onSeekComplete(MediaPlayer mp) {
-		isSeekComplete = true;
-		log.e("onSeekComplete ...");
-	}
-
-	@Override
-	public boolean onError(MediaPlayer mp, int what, int extra) {
-		mUIManager.showPlayErrorTip();
-		log.e("onError what = " + what + ", extra = " + extra);
-		return false;
-	}
-
-	@Override
-	public void onPlayCommand() {
-		log.e("onPlayCmd");
-		if (!isPause){
-			play();
-		}
-	}
-
-	@Override
-	public void onPauseCommand() {
-		log.e("onPauseCmd");
-		if (!isPause){
-			pause();
-		}
-	}
-
-	@Override
-	public void onStopCommand() {
-		log.e("onStopCmd");
-		stop();
-	}
-
-	@Override
-	public void onSeekCommand(int time) {
-		log.e("onSeekCmd time = " + time);
-		mUIManager.showControlView(true);
-		seek(time);
-	}
 
 }

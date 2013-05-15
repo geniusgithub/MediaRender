@@ -106,6 +106,7 @@ public class MediaRenderService extends Service implements IBaseEngine, ActionIn
 		stopEngine();
 		removeStartMsg();
 		removeRestartMsg();
+		mMediaGenaBrocastFactory.unRegisterBrocast();
 	}
 
 	private void delayToSendStartMsg(){
