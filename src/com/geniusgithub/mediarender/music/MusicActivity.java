@@ -1,6 +1,7 @@
 package com.geniusgithub.mediarender.music;
 
 import com.geniusgithub.mediarender.R;
+import com.geniusgithub.mediarender.R.drawable;
 import com.geniusgithub.mediarender.center.DLNAGenaEventBrocastFactory;
 import com.geniusgithub.mediarender.center.DlnaMediaModel;
 import com.geniusgithub.mediarender.center.DlnaMediaModelFactory;
@@ -18,6 +19,8 @@ import com.geniusgithub.mediarender.util.LogFactory;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnErrorListener;
@@ -27,11 +30,13 @@ import android.media.audiofx.Visualizer.OnDataCaptureListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore.Audio.ArtistColumns;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +50,7 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 	private final static int EXIT_ACTIVITY = 0x0003;
 	private final static int REFRESH_SPEED = 0x0004;
 	private final static int CHECK_DELAY = 0x0005;
+	private final static int LOAD_DRAWABLE_COMPLETE = 0x0006;
 	
 	
 	private final static int EXIT_DELAY_TIME = 3000;
@@ -133,6 +139,14 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 					case CHECK_DELAY:
 						checkDelay();				
 						break;
+					case LOAD_DRAWABLE_COMPLETE:
+						Object object = msg.obj;
+						Drawable drawable = null;
+						if (object != null){
+							drawable = (Drawable) object;
+						}
+						onLoadDrawableComplete(drawable);
+						break;
 				}
 			}
 			
@@ -168,9 +182,11 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 		if (intent != null){
 			mMediaInfo = DlnaMediaModelFactory.createFromIntent(intent);
 		}
+			
 
 		mUIManager.updateMediaInfoView(mMediaInfo);
 		mPlayerEngineImpl.playMedia(mMediaInfo);
+		LoaderHelper.syncDownLoadDrawable(mMediaInfo.getAlbumUri(), mHandler, LOAD_DRAWABLE_COMPLETE);
 		
 		mUIManager.showPrepareLoadView(true);
 		mUIManager.showLoadView(false);
@@ -232,6 +248,15 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 		}
 		
 		mCheckDelayTimer.setPos(pos);
+		
+	}
+	
+	public void onLoadDrawableComplete(Drawable drawable){
+		if (isDestroy || drawable == null){
+			return ;
+		}
+		
+		mUIManager.updateAlbumPIC(drawable);
 		
 	}
 	
@@ -378,16 +403,20 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 		public TextView mTVLoadSpeed;
 		
 		public View mControlView;	
-
+		public TextView mTVSongName;
+		public TextView mTVArtist;
+		public TextView mTVAlbum;
+	
 		public ImageButton mBtnPlay;
 		public ImageButton mBtnPause;
 		public SeekBar mSeekBar;
 		public TextView mTVCurTime;
 		public TextView mTVTotalTime;
-		private VisualizerView mVisualizerView;
+		public VisualizerView mVisualizerView;
+		public ImageView mIVAlbum; 
 		
-		private TranslateAnimation mHideDownTransformation;
-		private AlphaAnimation mAlphaHideTransformation;
+		public TranslateAnimation mHideDownTransformation;
+		public AlphaAnimation mAlphaHideTransformation;
 		
 		
 		public UIManager(){
@@ -403,7 +432,9 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 			mTVLoadSpeed = (TextView) findViewById(R.id.tv_speed);
 			
 			mControlView = findViewById(R.id.control_panel);	
-			
+			mTVSongName = (TextView) findViewById(R.id.tv_title);
+			mTVArtist = (TextView) findViewById(R.id.tv_artist);
+			mTVAlbum = (TextView) findViewById(R.id.tv_album);
 			
 			mBtnPlay = (ImageButton) findViewById(R.id.btn_play);
 			mBtnPause = (ImageButton) findViewById(R.id.btn_pause);
@@ -413,6 +444,7 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 			mTVCurTime = (TextView) findViewById(R.id.tv_curTime);
 			mTVTotalTime = (TextView) findViewById(R.id.tv_totalTime);
 			mVisualizerView = (VisualizerView) findViewById(R.id.mp_freq_view);
+			mIVAlbum = (ImageView) findViewById(R.id.iv_album);
 			setSeekbarListener(this);
 			
 		    
@@ -422,12 +454,19 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 	    	mAlphaHideTransformation = new AlphaAnimation(1, 0);
 	    	mAlphaHideTransformation.setDuration(1000);
 	    	
-	    	
+	    	updateAlbumPIC(getResources().getDrawable(R.drawable.mp_music_default));
 		}
 
 		
 		public void unInit(){
 			
+		}
+
+		public void updateAlbumPIC(Drawable drawable){
+			Bitmap bitmap = ImageUtils.createRotateReflectedMap(mContext, drawable);
+			if (bitmap != null){
+				mIVAlbum.setImageBitmap(bitmap);
+			}
 		}
 		
 		public void showPrepareLoadView(boolean isShow){
@@ -546,6 +585,10 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 			setTotalTime(0);
 			setSeekbarMax(100);
 			setSeekbarProgress(0);
+	
+			mTVSongName.setText(mediaInfo.getTitle());
+			mTVArtist.setText(mediaInfo.getArtist());
+			mTVAlbum.setText(mediaInfo.getAlbum());
 		}
 		
 		public void setSpeed(float speed){

@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import android.content.Context;
 
 import com.geniusgithub.mediarender.center.DlnaMediaModel;
+import com.geniusgithub.mediarender.datastore.LocalConfigSharePreference;
 import com.geniusgithub.mediarender.jni.PlatinumReflection;
 
 
@@ -13,16 +14,17 @@ public class DlnaUtils {
 
 	private static final CommonLog log = LogFactory.createLog();
 	
-	public static String getDMRString(Context context){
-		long time1 = System.currentTimeMillis();
-		String name = "king";
-		long time2 = System.currentTimeMillis();
-		return name;
+	public static boolean setDevName(Context context, String friendName){
+		return LocalConfigSharePreference.commintDevName(context, friendName);
+	}
+	
+	public static String getDevName(Context context){
+		return LocalConfigSharePreference.getDevName(context);
 	}
 	
 	
-	public static String creatNewUUID_12Bit(Context context){
-		String defaultUUID  = "qwertyuiop102";
+	public static String creat12BitUUID(Context context){
+		String defaultUUID  = "123456789abc";
 		
 		String mac = CommonUtil.getLocalMacAddress(context);
 	

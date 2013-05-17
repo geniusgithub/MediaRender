@@ -2,6 +2,7 @@ package com.geniusgithub.mediarender.center;
 
 import android.content.Context;
 
+import com.geniusgithub.mediarender.RenderApplication;
 import com.geniusgithub.mediarender.jni.PlatinumJniProxy;
 import com.geniusgithub.mediarender.util.CommonLog;
 import com.geniusgithub.mediarender.util.CommonUtil;
@@ -21,10 +22,11 @@ public class DMRWorkThread extends Thread implements IBaseEngine{
 	
 	private String mFriendName = "";
 	private String mUUID = "";	
-
+	private RenderApplication mApplication;
 	
 	public DMRWorkThread(Context context){
 		mContext = context;
+		mApplication = RenderApplication.getInstance();
 	}
 	
 	public void  setFlag(boolean flag){
@@ -34,6 +36,7 @@ public class DMRWorkThread extends Thread implements IBaseEngine{
 	public void setParam(String friendName, String uuid){
 		mFriendName = friendName;
 		mUUID = uuid;
+		mApplication.updateDevInfo(mFriendName, mUUID);
 	}
 	
 	public void awakeThread(){
@@ -108,17 +111,16 @@ public class DMRWorkThread extends Thread implements IBaseEngine{
 
 	//	int ret = PlatinumJniProxy.startMediaRender(mFriendName, mUUID);
 		int ret = DMRJniProxy.initRender(mFriendName, mUUID);
-		if (ret == 0){
-			return true;
-		}
-	
-		return false;
+		boolean result = (ret == 0 ? true : false);
+		mApplication.setDevStatus(result);
+		return result;
 	}
 
 	@Override
 	public boolean stopEngine() {
 	//	PlatinumJniProxy.stopMediaRender();
 		DMRJniProxy.stopRender();
+		mApplication.setDevStatus(false);
 		return true;
 	}
 

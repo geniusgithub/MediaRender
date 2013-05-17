@@ -1,6 +1,7 @@
 package com.geniusgithub.mediarender.player;
 
 import android.content.Context;
+import android.util.Log;
 
 public class CheckDelayTimer extends AbstractTimer{
 

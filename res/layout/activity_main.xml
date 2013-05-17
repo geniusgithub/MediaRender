@@ -9,8 +9,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
-    android:orientation="horizontal" 
-    android:background="#ffffff">
+    android:orientation="horizontal">
          
         <Button
 	    android:id="@+id/btn_init"
@@ -36,50 +35,42 @@
 	    android:text="STOP" />
         
     </LinearLayout>
-  
 
 	<View android:layout_marginTop="10dp" android:layout_width="fill_parent"   android:layout_height="1dp"   android:background="#000000"></View>
 
-	
-	
-<!--     <LinearLayout  -->
-<!--     android:layout_width="fill_parent" -->
-<!--     android:layout_height="wrap_content" -->
-<!--     android:layout_marginTop="10dp" -->
-<!--     android:orientation="horizontal"  -->
-<!--     android:background="#ffffff"> -->
+    <LinearLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:orientation="horizontal"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp">
         
-<!--         <Button -->
-<!-- 	    android:id="@+id/btn_change_name" -->
-<!-- 	    android:layout_width="fill_parent" -->
-<!-- 	    android:layout_height="wrap_content" -->
-<!-- 	    android:layout_weight="1" -->
-<!-- 	    android:text="@string/test_changename" /> -->
+        <Button
+        android:id="@+id/bt_dev_name"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="DEV_NAME:" 
+	    android:textColor="#000000"
+	    android:textSize="18sp"/>
         
-<!--         <EditText  -->
-<!--         android:id="@+id/et_change_name" -->
-<!-- 	    android:layout_width="fill_parent" -->
-<!-- 	    android:layout_height="wrap_content" -->
-<!-- 	    android:layout_weight="1"> -->
-<!--         </EditText> -->
+        <EditText 
+        android:id="@+id/et_dev_name"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
+	    android:layout_marginLeft="10dp">
+        </EditText>
         
-<!--     </LinearLayout> -->
+    </LinearLayout>
 	    
-        
-<!-- 	<TextView -->
-<!-- 	    android:id="@+id/tv_devicename" -->
-<!-- 	    android:layout_width="fill_parent" -->
-<!-- 	    android:layout_height="wrap_content" -->
-<!-- 	    android:textColor="#000000" -->
-<!-- 	    android:textSize="20sp" -->
-<!-- 	    android:gravity="left"/> -->
-	
-	
-<!-- 	<Button -->
-<!-- 	    android:id="@+id/btn_testgena" -->
-<!-- 	    android:layout_width="fill_parent" -->
-<!-- 	    android:layout_height="50dp" -->
-<!-- 	    android:visibility="gone" -->
-<!-- 	    android:text="gena" /> -->
-	
+    <View android:layout_marginTop="10dp" android:layout_width="fill_parent"   android:layout_height="1dp"   android:background="#000000"></View> 
+
+	 <TextView
+	    android:id="@+id/tv_dev_info"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:textSize="22sp"
+	    android:textColor="#ff9999ff"/>
+	 
 </LinearLayout>

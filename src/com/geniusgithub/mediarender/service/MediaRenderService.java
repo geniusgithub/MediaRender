@@ -1,5 +1,6 @@
 package com.geniusgithub.mediarender.service;
 
+import com.geniusgithub.mediarender.RenderApplication;
 import com.geniusgithub.mediarender.center.DMRCenter;
 import com.geniusgithub.mediarender.center.DMRWorkThread;
 import com.geniusgithub.mediarender.center.IBaseEngine;
@@ -26,6 +27,7 @@ public class MediaRenderService extends Service implements IBaseEngine, ActionIn
 	
 	public static final String START_RENDER_ENGINE = "com.geniusgithub.start.engine";
 	public static final String RESTART_RENDER_ENGINE = "com.geniusgithub.restart.engine";
+
 
 	private DMRWorkThread mWorkThread;
 	
@@ -78,6 +80,7 @@ public class MediaRenderService extends Service implements IBaseEngine, ActionIn
 	
 	
 	private void initRenderService(){
+
 		mListener = new DMRCenter(this);
 		//PlatinumReflection.setActionInvokeListener(mListener);
 		DLNAInflectClass.setActionCallback(this);
@@ -144,14 +147,22 @@ public class MediaRenderService extends Service implements IBaseEngine, ActionIn
 
 	@Override
 	public boolean restartEngine() {
-		awakeWorkThread();
+		String friendName = DlnaUtils.getDevName(this);
+		String uuid = DlnaUtils.creat12BitUUID(this);
+		mWorkThread.setParam(friendName, uuid);
+		if (mWorkThread.isAlive()){
+			mWorkThread.restartEngine();
+		}else{
+			mWorkThread.start();
+		}
 		return true;
 	}
 
 	private void awakeWorkThread(){
-		String friendName = DlnaUtils.getDMRString(this);
-		String uuid = DlnaUtils.creatNewUUID_12Bit(this);
+		String friendName = DlnaUtils.getDevName(this);
+		String uuid = DlnaUtils.creat12BitUUID(this);
 		mWorkThread.setParam(friendName, uuid);
+		
 		
 		if (mWorkThread.isAlive()){
 			mWorkThread.awakeThread();

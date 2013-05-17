@@ -48,7 +48,6 @@ public class MusicPlayEngineImpl extends AbstractMediaPlayEngine{
 		mVisualizer.setCaptureSize(256);
 		if (mDataCaptureListener != null){
 			mVisualizer.setDataCaptureListener(mDataCaptureListener, maxCR/2, false, true);
-			log.e("sessionID = " + sID + ", setDataCaptureListener rate = " + maxCR / 2);
 		}
 		
 		return true;
@@ -65,7 +64,6 @@ public class MusicPlayEngineImpl extends AbstractMediaPlayEngine{
 	public void enableVisualizer(boolean flag){
 		if (mVisualizer != null){
 			mVisualizer.setEnabled(flag);
-			log.e("mVisualizer.setEnabled ： " + flag);
 		}
 	}
 	
