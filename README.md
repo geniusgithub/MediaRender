@@ -17,9 +17,8 @@ Code fragment
 
 
 
-public class MediaRenderService extends Service implements IBaseEngine{
-
-  private static final CommonLog log = LogFactory.createLog();
+		public class MediaRenderService extends Service implements IBaseEngine{
+		private static final CommonLog log = LogFactory.createLog();
 	
 	public static final String START_RENDER_ENGINE = "com.geniusgithub.start.engine";
 	public static final String RESTART_RENDER_ENGINE = "com.geniusgithub.restart.engine";
@@ -189,9 +188,8 @@ public class MediaRenderService extends Service implements IBaseEngine{
 
 
 
-public class DMRWorkThread extends Thread implements IBaseEngine{
-
-  	private static final CommonLog log = LogFactory.createLog();
+		public class DMRWorkThread extends Thread implements IBaseEngine{
+		private static final CommonLog log = LogFactory.createLog();
 	
 	private static final int CHECK_INTERVAL = 30 * 1000; 
 	
