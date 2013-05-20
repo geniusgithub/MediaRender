@@ -1,7 +1,6 @@
 a MediaRender Player run in Android Platform 
 ===========
-MediaRender is a DLNA device(DMR) that can be found and control
-It uses the framework of Platinum
+MediaRender is a DLNA device(DMR) that can be found and control<br />  It uses the framework of Platinum
 
 Example screenshot below:
 
@@ -311,7 +310,7 @@ Code fragment
 
 Run requirements
 ------------------------------
-Android OS 2.3x and up
+Android OS 2.3x and up<br />
 Tested with: Samsung, HTC, HuaWei Phone and so on...
 
 
@@ -324,9 +323,9 @@ If you want to add something that will require some for of persistence incl. per
 ### Links
 csdn blog : [http://blog.csdn.net/geniuseoe2012](http://blog.csdn.net/geniuseoe2012)<br /> 
 dlna doc: [DLNA Document](http://dldx.csdn.net/fd.php?i=424049699616272&s=4e1123dc3fbd7862bbcb8c252fdcbe79)<br />
-
+Platinum SDK : [Platinum](http://sourceforge.net/projects/platinum/)<br /> 
 
 ### Development
-If you think this article useful Nepal , please pay attention to me,
+If you think this article useful Nepal , please pay attention to me<br />
 Your support is my motivation, I will continue to strive to do better
 
