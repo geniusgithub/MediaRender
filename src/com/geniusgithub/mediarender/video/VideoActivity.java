@@ -215,7 +215,6 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 	
 	private void delayToPlayMedia(final DlnaMediaModel mMediaInfo){
 	
-		log.e("delayToPlayMedia");
 		mHandler.postDelayed(new Runnable() {
 			
 			@Override
@@ -243,7 +242,7 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 	}
 	
 	private void delayToExit(){
-		log.e("delayToExit");
+
 		removeExitMessage();
 		mHandler.sendEmptyMessageDelayed(EXIT_ACTIVITY, EXIT_DELAY_TIME);
 	}
@@ -412,7 +411,7 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 
 	@Override
 	public void onSeekCommand(int time) {
-		log.e("onSeekCmd time = " + time);
+
 		mUIManager.showControlView(true);
 		seek(time);
 	}
@@ -552,20 +551,20 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 		private boolean isSeekbarTouch = false;	
 		@Override
 		public void surfaceCreated(SurfaceHolder holder) {
-			log.e("surfaceCreated...");
+			
 			isSurfaceCreate = true;
 		}
 
 		@Override
 		public void surfaceChanged(SurfaceHolder holder, int format, int width,
 				int height) {
-			log.e("surfaceChanged  width = " + width + ", height = "  + height);
+
 			
 		}
 
 		@Override
 		public void surfaceDestroyed(SurfaceHolder holder) {
-			log.e("surfaceDestroyed");
+
 			isSurfaceCreate = false;
 		}
 

@@ -40,7 +40,7 @@ public class DlnaUtils {
 	
 	
 
-	public static int getSeekTime(String data) throws Exception{
+	public static int parseSeekTime(String data) throws Exception{
 		
 		int seekPos = 0;		
 	

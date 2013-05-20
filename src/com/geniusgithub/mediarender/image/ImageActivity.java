@@ -209,7 +209,6 @@ public class ImageActivity extends Activity  implements MediaControlBrocastFacto
 
 	@Override
 	public void downLoadResult(boolean isSuccess, String savePath) {
-		log.d("downLoadResult isSuccess = " + isSuccess + "\nsavePath = " + savePath);
 		
 		onTransDelLoadResult(isSuccess, savePath);
 	}

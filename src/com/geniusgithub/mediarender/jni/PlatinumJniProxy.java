@@ -5,18 +5,14 @@ import java.io.UnsupportedEncodingException;
 public class PlatinumJniProxy {
 
     static {
-        System.loadLibrary("platinum");
+        System.loadLibrary("git-platinum");
     }   
  
     public static native int startMediaRender(byte[] friendname ,byte[] uuid);
     public static native int stopMediaRender();  
     public static native boolean responseGenaEvent(int cmd, byte[] value ,byte[] data);  
     public static native boolean enableLogPrint(boolean flag);
-  
-   
-    
-    
-    
+ 
     
     public static  int startMediaRender(String friendname ,String uuid){
     	if (friendname == null)friendname = "";
@@ -41,7 +37,6 @@ public class PlatinumJniProxy {
 		}
     	return ret;
     }
-    
     
     
 }

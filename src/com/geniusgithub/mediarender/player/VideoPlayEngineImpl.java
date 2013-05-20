@@ -46,7 +46,7 @@ public class VideoPlayEngineImpl extends AbstractMediaPlayEngine{
 	
 	@Override
 	protected boolean prepareSelf() {
-		log.e("prepareSelf");
+
 		mMediaPlayer.reset();
 		try {
 			mMediaPlayer.setDataSource(mMediaInfo.getUrl());
@@ -79,7 +79,7 @@ public class VideoPlayEngineImpl extends AbstractMediaPlayEngine{
 
 	@Override
 	protected boolean prepareComplete(MediaPlayer mp) {
-		log.e("prepareComplete");	
+
 		mPlayState = PlayState.MPS_PARECOMPLETE;
 		if (mPlayerEngineListener != null){
 			mPlayerEngineListener.onTrackPrepareComplete(mMediaInfo);

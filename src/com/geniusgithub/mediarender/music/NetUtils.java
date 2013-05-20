@@ -54,7 +54,7 @@ private static final CommonLog log = LogFactory.createLog();
 			input.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.e("getDrawableFromUri catch exception!!!e = " + e.getMessage());
+		//	log.e("getDrawableFromUri catch exception!!!e = " + e.getMessage());
 		}
 		
 		return drawable;

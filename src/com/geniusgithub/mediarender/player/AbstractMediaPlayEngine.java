@@ -118,7 +118,7 @@ public abstract class AbstractMediaPlayEngine implements IBasePlayEngine, OnComp
 
 	@Override
 	public void onPrepared(MediaPlayer mp) {
-		log.e("onPrepared...");
+	
 		prepareComplete(mp);
 	}
 	

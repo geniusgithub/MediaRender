@@ -95,7 +95,7 @@ public class MusicPlayEngineImpl extends AbstractMediaPlayEngine{
 	
 	@Override
 	protected boolean prepareSelf() {
-		log.e("prepareSelf");
+	
 		mMediaPlayer.reset();
 		try {
 			mMediaPlayer.setDataSource(mMediaInfo.getUrl());

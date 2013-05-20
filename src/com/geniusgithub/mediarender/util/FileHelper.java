@@ -95,7 +95,7 @@ public class FileHelper {
 			File[] list = file.listFiles();
 
 			for (int i = 0; i < list.length; i++) {
-				log.d("delete filePath: " + list[i].getAbsolutePath());
+	//			log.d("delete filePath: " + list[i].getAbsolutePath());
 				if (list[i].isDirectory()) {
 					deleteDirectory(list[i].getAbsolutePath());
 				} else {

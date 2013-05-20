@@ -36,7 +36,7 @@ public class DMRCenter implements ActionReflectionListener, IDMRAction{
 	
 	@Override
 	public synchronized void onActionInvoke(int cmd, String value, String data) {
-		log.d("onActionInvoke cmd = " + cmd + "\nvalue = " + value + "\ndata = " + data);
+	
 		switch(cmd){		
 			case PlatinumReflection.MEDIA_RENDER_CTL_MSG_SET_AV_URL:		
 				onRenderAvTransport(value, data);
@@ -138,7 +138,7 @@ public class DMRCenter implements ActionReflectionListener, IDMRAction{
 	public void onRenderSeek(String value, String data) {
 		int seekPos = 0;
 		try {
-			seekPos = DlnaUtils.getSeekTime(value);
+			seekPos = DlnaUtils.parseSeekTime(value);
 			MediaControlBrocastFactory.sendSeekBrocast(mContext, seekPos);
 		} catch (Exception e) {
 			e.printStackTrace();

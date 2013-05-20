@@ -11,8 +11,7 @@ import com.geniusgithub.mediarender.jni.PlatinumReflection.ActionReflectionListe
 import com.geniusgithub.mediarender.util.CommonLog;
 import com.geniusgithub.mediarender.util.DlnaUtils;
 import com.geniusgithub.mediarender.util.LogFactory;
-import com.mipt.platinum.DLNAInflectClass;
-import com.mipt.platinum.DLNAInflectClass.ActionInflectCallback;
+
 
 
 import android.app.Service;
@@ -21,7 +20,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 
-public class MediaRenderService extends Service implements IBaseEngine, ActionInflectCallback{
+public class MediaRenderService extends Service implements IBaseEngine{
 
 	private static final CommonLog log = LogFactory.createLog();
 	
@@ -82,8 +81,7 @@ public class MediaRenderService extends Service implements IBaseEngine, ActionIn
 	private void initRenderService(){
 
 		mListener = new DMRCenter(this);
-		//PlatinumReflection.setActionInvokeListener(mListener);
-		DLNAInflectClass.setActionCallback(this);
+		PlatinumReflection.setActionInvokeListener(mListener);
 		mMediaGenaBrocastFactory = new DLNAGenaEventBrocastFactory(this);
 		mMediaGenaBrocastFactory.registerBrocast();
 		mWorkThread = new DMRWorkThread(this);
@@ -188,9 +186,5 @@ public class MediaRenderService extends Service implements IBaseEngine, ActionIn
 		}
 	}
 
-	@Override
-	public void onActionFromDMR(int cmd, String value, String data) {
-		mListener.onActionInvoke(cmd, value, data);
-	}
 
 }
