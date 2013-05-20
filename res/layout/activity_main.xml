@@ -12,23 +12,23 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:text="Media Render"
-    android:textSize="32sp"
+    android:textSize="22sp"
     android:textColor="#ff2010ff"/>
 	 
 	 
-    <View android:layout_marginTop="10dp" android:layout_width="fill_parent"   android:layout_height="1dp"   android:background="#333333"></View>
+    <View android:layout_marginTop="5dp" android:layout_width="fill_parent"   android:layout_height="1dp"   android:background="#333333"></View>
     	
     	
     <LinearLayout 
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
+    android:layout_marginTop="5dp"
     android:orientation="horizontal">
          
         <Button
 	    android:id="@+id/btn_init"
 	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
+	    android:layout_height="60dp"
 	    android:layout_weight="1"
 	    android:text="START" 
 	    android:textSize="20sp"
@@ -38,7 +38,7 @@
 	    <Button
 	    android:id="@+id/btn_reset"
 	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
+	    android:layout_height="60dp"
 	    android:layout_weight="1"
 	    android:textSize="20sp"
 	    android:text="RESTART" 
@@ -48,7 +48,7 @@
 	    <Button
 	    android:id="@+id/btn_exit"
 	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
+	    android:layout_height="60dp"
 	    android:textSize="20sp"
 	    android:layout_weight="1"
 	    android:text="STOP" 
@@ -56,12 +56,12 @@
         
     </LinearLayout>
 
-	<View android:layout_marginTop="20dp" android:layout_width="fill_parent"   android:layout_height="1dp"   android:background="#333333"></View>
+	<View android:layout_marginTop="5dp" android:layout_width="fill_parent"   android:layout_height="1dp"   android:background="#333333"></View>
 
     <LinearLayout 
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="20dp"
+    android:layout_marginTop="5dp"
     android:orientation="horizontal"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp">
@@ -69,7 +69,7 @@
         <Button
         android:id="@+id/bt_dev_name"
 	    android:layout_width="120dp"
-	    android:layout_height="wrap_content"
+	    android:layout_height="60dp"
 	    android:text="DEV_NAME:" 
 	    android:textColor="#000000"
 	    android:textSize="18sp"
@@ -78,7 +78,7 @@
         <EditText 
         android:id="@+id/et_dev_name"
 	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
+	    android:layout_height="50dp"
 	    android:layout_weight="1"
 	    android:layout_marginLeft="10dp"
 	    android:paddingLeft="28dp"
@@ -87,7 +87,7 @@
         
     </LinearLayout>
 	    
-    <View android:layout_marginTop="10dp" android:layout_width="fill_parent"   android:layout_height="1dp"   android:background="#333333"></View> 
+    <View android:layout_marginTop="5dp" android:layout_width="fill_parent"   android:layout_height="1dp"   android:background="#333333"></View> 
 
 	<TextView
     android:id="@+id/tv_dev_info"
@@ -101,7 +101,7 @@
 	<TextView
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_marginBottom="20dp"
+    android:layout_marginBottom="5dp"
     android:gravity="center_horizontal|bottom"
     android:text="https://github.com/geniusgithub"
     android:textSize="22sp"
