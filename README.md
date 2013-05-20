@@ -1,7 +1,9 @@
 a MediaRender Player run in Android Platform 
 ===========
-a MediaRender Player used by upnp protocol(DLNA-DMR)
+MediaRender is a DLNA device(DMR) that can be found and control
+It uses the framework of Platinum
 
+Example screenshot below:
 
 ![github](http://img.my.csdn.net/uploads/201305/20/1369039180_2648.png "github")  
 
@@ -310,18 +312,16 @@ Code fragment
 
 
 
-Feature
+
+Contributing
 ------------------------------
-
-
-feature
-
-
+Feel free to drop me pull requests. If you plan to implement something more than a few lines, then open the pull request early so that there aren't any nasty surprises later.
+If you want to add something that will require some for of persistence incl. persistent configuration or API keys, etc., then open a pull request/issue especially early!
 
 
 ### Links
 csdn bolg : [http://blog.csdn.net/geniuseoe2012](http://blog.csdn.net/geniuseoe2012)<br /> 
-
+dlna doc: [http://dldx.csdn.net/fd.php?i=424049699616272&s=4e1123dc3fbd7862bbcb8c252fdcbe79](DLNA Document)<br />
 
 
 ### Development
