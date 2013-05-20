@@ -3,11 +3,20 @@ a MediaRender Player run in Android Platform
 a MediaRender Player used by upnp protocol(DLNA-DMR)
 
 
-![github](http://my.csdn.net/my/album/detail/1643455#1643456 "github")  
+![github](http://img.my.csdn.net/uploads/201305/20/1369039180_2648.png "github")  
+
+![github](http://img.my.csdn.net/uploads/201305/20/1369039181_1241.png "github")  
+
+![github](http://img.my.csdn.net/uploads/201305/20/1369039181_3596.png "github")  
+
+![github](http://img.my.csdn.net/uploads/201305/20/1369039181_7415.png "github")  
 
 
 Code fragment
 --------------------
+
+
+
 public class MediaRenderService extends Service implements IBaseEngine{
 
   private static final CommonLog log = LogFactory.createLog();
@@ -178,10 +187,11 @@ public class MediaRenderService extends Service implements IBaseEngine{
 }
 
 
+
+
 public class DMRWorkThread extends Thread implements IBaseEngine{
 
-
-  private static final CommonLog log = LogFactory.createLog();
+  	private static final CommonLog log = LogFactory.createLog();
 	
 	private static final int CHECK_INTERVAL = 30 * 1000; 
 	
@@ -307,7 +317,7 @@ Feature
 ------------------------------
 
 
-
+feature
 
 
 
