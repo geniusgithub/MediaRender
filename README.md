@@ -322,7 +322,7 @@ If you want to add something that will require some for of persistence incl. per
 
 ### Links
 csdn blog : [http://blog.csdn.net/geniuseoe2012](http://blog.csdn.net/geniuseoe2012)<br /> 
-dlna doc: [DLNA Document](http://dldx.csdn.net/fd.php?i=424049699616272&s=4e1123dc3fbd7862bbcb8c252fdcbe79)<br />
+dlna doc: [DLNA Document](http://download.csdn.net/detail/geniuseoe2012/4969961)<br />
 Platinum SDK : [Platinum](http://sourceforge.net/projects/platinum/)<br /> 
 
 ### Development
