@@ -8,6 +8,8 @@ Example screenshot below:
 
 ![github](http://img.my.csdn.net/uploads/201305/20/1369039181_1241.png "github")  
 
+![github](http://img.my.csdn.net/uploads/201312/27/1388139669_8703.png "github")  
+
 ![github](http://img.my.csdn.net/uploads/201305/20/1369039181_3596.png "github")  
 
 ![github](http://img.my.csdn.net/uploads/201305/20/1369039181_7415.png "github")  
