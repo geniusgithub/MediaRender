@@ -1,9 +1,9 @@
 package com.geniusgithub.mediarender.video;
 
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnErrorListener;
@@ -11,7 +11,6 @@ import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -20,7 +19,6 @@ import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -33,8 +31,8 @@ import com.geniusgithub.mediarender.center.DlnaMediaModelFactory;
 import com.geniusgithub.mediarender.center.MediaControlBrocastFactory;
 import com.geniusgithub.mediarender.player.AbstractTimer;
 import com.geniusgithub.mediarender.player.CheckDelayTimer;
-import com.geniusgithub.mediarender.player.SingleSecondTimer;
 import com.geniusgithub.mediarender.player.PlayerEngineListener;
+import com.geniusgithub.mediarender.player.SingleSecondTimer;
 import com.geniusgithub.mediarender.player.VideoPlayEngineImpl;
 import com.geniusgithub.mediarender.util.CommonLog;
 import com.geniusgithub.mediarender.util.CommonUtil;
@@ -194,6 +192,7 @@ public class VideoActivity extends Activity implements MediaControlBrocastFactor
 		mUIManager.showControlView(false);
 	}	
 
+	
 	public boolean dispatchTouchEvent(MotionEvent ev) {
 
 		int action = ev.getAction();

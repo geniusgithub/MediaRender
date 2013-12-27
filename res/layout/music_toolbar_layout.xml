@@ -101,6 +101,7 @@
 	     
 	
 	<LinearLayout
+	    android:id="@+id/song_info_view"
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content"
 	   	android:layout_above="@id/down_toolview"
@@ -144,8 +145,20 @@
 			    	android:textSize="18sp">
 				    </TextView>
 		        
-		    </LinearLayout>
+		    </LinearLayout>	    
+	</LinearLayout>
+	
+	<LinearLayout
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content"
+	   	android:layout_above="@id/down_toolview"
+	    android:gravity="center">
 	    
+	    <com.geniusgithub.mediarender.music.lrc.LyricView
+        android:id="@+id/lrc_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"/>
 	    
 	</LinearLayout>
     

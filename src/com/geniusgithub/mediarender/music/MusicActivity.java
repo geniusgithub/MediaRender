@@ -1,20 +1,6 @@
 package com.geniusgithub.mediarender.music;
 
-import com.geniusgithub.mediarender.R;
-import com.geniusgithub.mediarender.R.drawable;
-import com.geniusgithub.mediarender.center.DLNAGenaEventBrocastFactory;
-import com.geniusgithub.mediarender.center.DlnaMediaModel;
-import com.geniusgithub.mediarender.center.DlnaMediaModelFactory;
-import com.geniusgithub.mediarender.center.MediaControlBrocastFactory;
-import com.geniusgithub.mediarender.player.AbstractTimer;
-import com.geniusgithub.mediarender.player.CheckDelayTimer;
-import com.geniusgithub.mediarender.player.MusicPlayEngineImpl;
-import com.geniusgithub.mediarender.player.PlayerEngineListener;
-import com.geniusgithub.mediarender.player.SingleSecondTimer;
-import com.geniusgithub.mediarender.util.CommonLog;
-import com.geniusgithub.mediarender.util.CommonUtil;
-import com.geniusgithub.mediarender.util.DlnaUtils;
-import com.geniusgithub.mediarender.util.LogFactory;
+import java.io.File;
 
 import android.app.Activity;
 import android.content.Context;
@@ -30,7 +16,7 @@ import android.media.audiofx.Visualizer.OnDataCaptureListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore.Audio.ArtistColumns;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
@@ -38,12 +24,33 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.SeekBar.OnSeekBarChangeListener;
+
+import com.geniusgithub.mediarender.R;
+import com.geniusgithub.mediarender.center.DLNAGenaEventBrocastFactory;
+import com.geniusgithub.mediarender.center.DlnaMediaModel;
+import com.geniusgithub.mediarender.center.DlnaMediaModelFactory;
+import com.geniusgithub.mediarender.center.MediaControlBrocastFactory;
+import com.geniusgithub.mediarender.music.lrc.LrcDownLoadHelper;
+import com.geniusgithub.mediarender.music.lrc.LyricView;
+import com.geniusgithub.mediarender.music.lrc.MusicUtils;
+import com.geniusgithub.mediarender.player.AbstractTimer;
+import com.geniusgithub.mediarender.player.CheckDelayTimer;
+import com.geniusgithub.mediarender.player.MusicPlayEngineImpl;
+import com.geniusgithub.mediarender.player.PlayerEngineListener;
+import com.geniusgithub.mediarender.player.SingleSecondTimer;
+import com.geniusgithub.mediarender.util.CommonLog;
+import com.geniusgithub.mediarender.util.CommonUtil;
+import com.geniusgithub.mediarender.util.DlnaUtils;
+import com.geniusgithub.mediarender.util.LogFactory;
 
 public class MusicActivity extends Activity implements MediaControlBrocastFactory.IMediaControlListener,
-									OnBufferingUpdateListener, OnSeekCompleteListener, OnErrorListener{
+									OnBufferingUpdateListener, 
+									OnSeekCompleteListener,
+									OnErrorListener,
+									LrcDownLoadHelper.ILRCDownLoadCallback{
 
 	private static final CommonLog log = LogFactory.createLog();
 	private final static int REFRESH_CURPOS = 0x0001;
@@ -51,7 +58,7 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 	private final static int REFRESH_SPEED = 0x0004;
 	private final static int CHECK_DELAY = 0x0005;
 	private final static int LOAD_DRAWABLE_COMPLETE = 0x0006;
-	
+	private final static int UPDATE_LRC_VIEW = 0x0007;
 	
 	private final static int EXIT_DELAY_TIME = 3000;
 	
@@ -60,7 +67,7 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 	private MusicPlayEngineImpl mPlayerEngineImpl;
 	private MusicPlayEngineListener mPlayEngineListener;
 	private MediaControlBrocastFactory mMediaControlBorcastFactory;
-
+	private LrcDownLoadHelper mLrcDownLoadHelper;
 	
 	private Context mContext;
 	private DlnaMediaModel mMediaInfo = new DlnaMediaModel();	
@@ -96,23 +103,48 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 	protected void onStop() {
 		super.onStop();
 		
-	//	finish();
+		mUIManager.unInit();
+		mPlayerEngineImpl.exit();
+		mLrcDownLoadHelper.unInit();
+		mCheckDelayTimer.stopTimer();
+		mNetWorkTimer.stopTimer();
+		mMediaControlBorcastFactory.unregister();
+		mPlayPosTimer.stopTimer();
+
+		finish();
 	}
 
 	@Override
 	protected void onDestroy() {
 		log.e("onDestroy");
 		isDestroy = true;
-		mUIManager.unInit();
-		mCheckDelayTimer.stopTimer();
-		mNetWorkTimer.stopTimer();
-		mMediaControlBorcastFactory.unregister();
-		mPlayPosTimer.stopTimer();
-		mPlayerEngineImpl.exit();
+		
 		super.onDestroy();
 
 	}
 
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event) {
+		
+		int keyCode = event.getKeyCode();
+		int keyAction = event.getAction();
+		
+		switch(keyCode){
+			case KeyEvent.KEYCODE_MENU:
+				if (keyAction == KeyEvent.ACTION_UP){
+					if (mUIManager.isLRCViewShow()){
+						mUIManager.showLRCView(false);
+					}else{
+						mUIManager.showLRCView(true);
+					}
+					return true;
+				}
+				break;
+		}
+		
+		return super.dispatchKeyEvent(event);
+	}
+	
 	public void setupsView()
 	{
 		mContext = this;
@@ -129,6 +161,7 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 				{
 					case REFRESH_CURPOS:					
 						refreshCurPos();
+						mUIManager.refreshLyrc(mPlayerEngineImpl.getCurPosition());
 						break;
 					case EXIT_ACTIVITY:
 						finish();
@@ -146,6 +179,9 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 							drawable = (Drawable) object;
 						}
 						onLoadDrawableComplete(drawable);
+						break;
+					case UPDATE_LRC_VIEW:
+						mUIManager.updateLyricView(mMediaInfo);
 						break;
 				}
 			}
@@ -169,10 +205,13 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 		mMediaControlBorcastFactory = new MediaControlBrocastFactory(mContext);
 		mMediaControlBorcastFactory.register(this);
 		
+		mLrcDownLoadHelper = new LrcDownLoadHelper();
+		mLrcDownLoadHelper.init();
+		
 		mNetWorkTimer.startTimer();
 		mCheckDelayTimer.startTimer();
 		
-	
+		mUIManager.showLRCView(false);
 	}
 	
 	
@@ -191,6 +230,13 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 		mUIManager.showPrepareLoadView(true);
 		mUIManager.showLoadView(false);
 		mUIManager.showControlView(false);
+		
+		boolean need = checkNeedDownLyric(mMediaInfo);
+		log.e("checkNeedDownLyric need = " + need);
+		if (need){
+			mLrcDownLoadHelper.syncDownLoadLRC(mMediaInfo.getTitle(), mMediaInfo.getArtist(), this);
+		}		
+		mUIManager.updateLyricView(mMediaInfo);
 
 	}	
 	
@@ -418,6 +464,10 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 		public TranslateAnimation mHideDownTransformation;
 		public AlphaAnimation mAlphaHideTransformation;
 		
+		public View mSongInfoView;
+		public LyricView mLyricView;
+		public boolean lrcShow = false;
+		
 		
 		public UIManager(){
 			initView();
@@ -447,6 +497,8 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 			mIVAlbum = (ImageView) findViewById(R.id.iv_album);
 			setSeekbarListener(this);
 			
+	    	mSongInfoView = findViewById(R.id.song_info_view);
+	    	mLyricView = (LyricView) findViewById(R.id.lrc_view);
 		    
 			mHideDownTransformation = new TranslateAnimation(0.0f, 0.0f,0.0f,200.0f);  
 	    	mHideDownTransformation.setDuration(1000);
@@ -462,6 +514,42 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 			
 		}
 
+		private  int DRAW_OFFSET_Y = 200;
+		public void updateLyricView(DlnaMediaModel mMediaInfo) {
+			log.e("updateLyricView song:" + mMediaInfo.getTitle() + ", artist:" + mMediaInfo.getArtist());
+
+			mLyricView.read(mMediaInfo.getTitle(), mMediaInfo.getArtist());
+			int pos = 0;
+			pos = mPlayerEngineImpl.getCurPosition();
+			refreshLyrc(pos);
+		}
+		
+		public void refreshLyrc(int pos){	
+			if (pos > 0) {
+				mLyricView.setOffsetY(DRAW_OFFSET_Y - mLyricView.selectIndex(pos)
+						* (mLyricView.getSIZEWORD() + LyricView.INTERVAL - 1));
+			} else {
+				mLyricView.setOffsetY(DRAW_OFFSET_Y);
+			}
+			mLyricView.invalidate();
+		}
+		
+		public boolean isLRCViewShow(){
+			return lrcShow;
+		}
+		
+		
+		public void showLRCView(boolean bshow){
+			lrcShow = bshow;
+			if (bshow){
+				mLyricView.setVisibility(View.VISIBLE);
+				mSongInfoView.setVisibility(View.GONE);
+			}else{
+				mLyricView.setVisibility(View.GONE);
+				mSongInfoView.setVisibility(View.VISIBLE);
+			}
+		}
+		
 		public void updateAlbumPIC(Drawable drawable){
 			Bitmap bitmap = ImageUtils.createRotateReflectedMap(mContext, drawable);
 			if (bitmap != null){
@@ -630,6 +718,27 @@ public class MusicActivity extends Activity implements MediaControlBrocastFactor
 		public void onWaveFormDataCapture(Visualizer visualizer,
 				byte[] waveform, int samplingRate) {
 			mVisualizerView.updateVisualizer(waveform);
+		}
+	}
+
+	private boolean checkNeedDownLyric(DlnaMediaModel mediaInfo) {
+		String lyricPath = MusicUtils.getLyricFile(mediaInfo.getTitle(), mediaInfo.getArtist());
+		if (lyricPath != null) {
+			File f = new File(lyricPath);
+			if (f.exists()) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
+	@Override
+	public void lrcDownLoadComplete(boolean isSuccess, String song, String artist) {
+
+		if (isSuccess && song.equals(mMediaInfo.getTitle()) && artist.equals(mMediaInfo.getArtist())){
+			Message msg = mHandler.obtainMessage(UPDATE_LRC_VIEW);
+			msg.sendToTarget();
 		}
 	}
 
