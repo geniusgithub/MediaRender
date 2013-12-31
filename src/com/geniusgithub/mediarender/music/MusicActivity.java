@@ -28,6 +28,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.geniusgithub.mediarender.BaseActivity;
 import com.geniusgithub.mediarender.R;
 import com.geniusgithub.mediarender.center.DLNAGenaEventBrocastFactory;
 import com.geniusgithub.mediarender.center.DlnaMediaModel;
@@ -46,7 +47,7 @@ import com.geniusgithub.mediarender.util.CommonUtil;
 import com.geniusgithub.mediarender.util.DlnaUtils;
 import com.geniusgithub.mediarender.util.LogFactory;
 
-public class MusicActivity extends Activity implements MediaControlBrocastFactory.IMediaControlListener,
+public class MusicActivity extends BaseActivity implements MediaControlBrocastFactory.IMediaControlListener,
 									OnBufferingUpdateListener, 
 									OnSeekCompleteListener,
 									OnErrorListener,

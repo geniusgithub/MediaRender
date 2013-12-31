@@ -20,7 +20,7 @@ import com.geniusgithub.mediarender.util.LogFactory;
  * @csdn  http://blog.csdn.net/geniuseoe2012
  * @github https://github.com/geniusgithub
  */
-public class MainActivity extends Activity implements OnClickListener, DeviceUpdateBrocastFactory.IDevUpdateListener{
+public class MainActivity extends BaseActivity implements OnClickListener, DeviceUpdateBrocastFactory.IDevUpdateListener{
 
 private static final CommonLog log = LogFactory.createLog();
 	

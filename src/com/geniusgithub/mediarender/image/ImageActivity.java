@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.geniusgithub.mediarender.BaseActivity;
 import com.geniusgithub.mediarender.R;
 import com.geniusgithub.mediarender.center.DlnaMediaModel;
 import com.geniusgithub.mediarender.center.DlnaMediaModelFactory;
@@ -26,7 +27,7 @@ import com.geniusgithub.mediarender.util.CommonUtil;
 import com.geniusgithub.mediarender.util.FileHelper;
 import com.geniusgithub.mediarender.util.LogFactory;
 
-public class ImageActivity extends Activity  implements MediaControlBrocastFactory.IMediaControlListener,
+public class ImageActivity extends BaseActivity  implements MediaControlBrocastFactory.IMediaControlListener,
 													DownLoadHelper.IDownLoadCallback{
 
 	private static final CommonLog log = LogFactory.createLog();

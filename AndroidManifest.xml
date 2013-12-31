@@ -24,6 +24,8 @@
         android:label="@string/app_name"
         android:name="com.geniusgithub.mediarender.RenderApplication">
         
+        <meta-data android:name="TD_APP_ID" android:value="7F0D6361854462718E6EEB92BF280894" /> 
+        <meta-data android:name="TD_CHANNEL_ID" android:value="91.com" />
         
         <service android:name="com.geniusgithub.mediarender.service.MediaRenderService" android:enabled="true">
             <intent-filter>
