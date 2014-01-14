@@ -9,6 +9,7 @@ import com.geniusgithub.mediarender.jni.PlatinumJniProxy;
 import com.geniusgithub.mediarender.jni.PlatinumReflection;
 import com.geniusgithub.mediarender.jni.PlatinumReflection.ActionReflectionListener;
 import com.geniusgithub.mediarender.util.CommonLog;
+import com.geniusgithub.mediarender.util.CommonUtil;
 import com.geniusgithub.mediarender.util.DlnaUtils;
 import com.geniusgithub.mediarender.util.LogFactory;
 
@@ -16,6 +17,7 @@ import com.geniusgithub.mediarender.util.LogFactory;
 
 import android.app.Service;
 import android.content.Intent;
+import android.net.wifi.WifiManager.MulticastLock;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -38,6 +40,8 @@ public class MediaRenderService extends Service implements IBaseEngine{
 	private static final int RESTART_ENGINE_MSG_ID = 0x0002;
 	
 	private static final int DELAY_TIME = 1000;
+	
+	private MulticastLock mMulticastLock;
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -100,6 +104,9 @@ public class MediaRenderService extends Service implements IBaseEngine{
 			}
 			
 		};
+		
+		mMulticastLock = CommonUtil.openWifiBrocast(this);
+		log.e("openWifiBrocast = "  +  mMulticastLock != null ? true : false);
 	}
 
 	
@@ -108,6 +115,11 @@ public class MediaRenderService extends Service implements IBaseEngine{
 		removeStartMsg();
 		removeRestartMsg();
 		mMediaGenaBrocastFactory.unRegisterBrocast();
+		if (mMulticastLock != null){
+			mMulticastLock.release();
+			mMulticastLock = null;
+			log.e("closeWifiBrocast");
+		}
 	}
 
 	private void delayToSendStartMsg(){

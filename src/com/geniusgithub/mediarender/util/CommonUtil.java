@@ -108,14 +108,13 @@ public class CommonUtil {
         return info.getMacAddress();   
     } 
 	
-	public static boolean openWifiBrocast(Context context){
+	public static MulticastLock openWifiBrocast(Context context){
 		WifiManager wifiManager=(WifiManager)context.getSystemService(Context.WIFI_SERVICE);
 		MulticastLock  multicastLock=wifiManager.createMulticastLock("MediaRender");
 		if (multicastLock != null){
 			multicastLock.acquire();
-			return true;
 		}
-		return false;
+		return multicastLock;
 	}
 	
 	
