@@ -30,12 +30,13 @@ public class DlnaUtils {
 	
 		mac = mac.replace(":","");
 		mac = mac.replace(".","");
-
+		
 		if (mac.length() != 12){
-			return defaultUUID;
-		}else{
-			return mac;
+			mac = defaultUUID;
 		}
+		
+		mac += "-dmr";
+		return mac;
 	}
 	
 	
