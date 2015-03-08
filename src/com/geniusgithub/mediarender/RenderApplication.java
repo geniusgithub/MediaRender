@@ -30,7 +30,8 @@ public class RenderApplication  extends Application implements ItatisticsEvent{
 		mInstance = this;
 		mDeviceInfo = new DeviceInfo();
 		
-		TCAgent.init(this);
+		  TCAgent.init(this);
+		  TCAgent.setReportUncaughtExceptions(true);
 	}
 
 	public void updateDevInfo(String name, String uuid){
