@@ -1,12 +1,12 @@
 package com.geniusgithub.mediarender.center;
 
+import android.content.Context;
+import android.content.Intent;
+
 import com.geniusgithub.mediarender.RenderApplication;
 import com.geniusgithub.mediarender.service.MediaRenderService;
 import com.geniusgithub.mediarender.util.CommonLog;
 import com.geniusgithub.mediarender.util.LogFactory;
-
-import android.content.Context;
-import android.content.Intent;
 
 public class MediaRenderProxy implements IBaseEngine{
 
@@ -28,7 +28,9 @@ public class MediaRenderProxy implements IBaseEngine{
 
 	@Override
 	public boolean startEngine() {
-		mContext.startService(new Intent(MediaRenderService.START_RENDER_ENGINE));
+		Intent intent = new Intent(MediaRenderService.START_RENDER_ENGINE);
+		intent.setPackage(mContext.getPackageName());
+		mContext.startService(intent);
 		return true;
 	}
 
@@ -40,7 +42,9 @@ public class MediaRenderProxy implements IBaseEngine{
 
 	@Override
 	public boolean restartEngine() {
-		mContext.startService(new Intent(MediaRenderService.RESTART_RENDER_ENGINE));
+		Intent intent = new Intent(MediaRenderService.RESTART_RENDER_ENGINE);
+		intent.setPackage(mContext.getPackageName());
+		mContext.startService(intent);
 		return true;
 	}
 
